@@ -17,9 +17,14 @@ app.use(express.json());
 const PORT = process.env.PORT || 5001;
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB Connected Successfully'))
-    .catch((err) => console.error('❌ MongoDB Connection Error:', err));
+if (!process.env.MONGO_URI) {
+    console.error("❌ CRITICAL ERROR: MONGO_URI is not defined in environment variables.");
+    // Do not crash immediately so logs can be read, but DB features won't work
+} else {
+    mongoose.connect(process.env.MONGO_URI)
+        .then(() => console.log('✅ MongoDB Connected Successfully'))
+        .catch((err) => console.error('❌ MongoDB Connection Error:', err));
+}
 
 // --- Schemas & Models ---
 
